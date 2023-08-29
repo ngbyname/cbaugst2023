@@ -1,20 +1,25 @@
 package com.code.bull.driver;
 
+import com.code.bull.commonutils.applicationutils.constants.ApplicationConstants;
+import com.code.bull.commonutils.applicationutils.constants.ConstantUtils;
+import com.code.bull.pagerepository.pagemethods.PageCollection;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.*;
 
 import java.lang.invoke.MethodHandles;
 
 public class Driver {
 
     protected static String env = System.getProperty("env");
-    protected static String browser = System.getProperty("browser");
+    protected static String browser = null;
     public static WebDriver driver;
+    public static ConstantUtils constants = ConstantUtils.getInstance();
+    public static PageCollection pages;
 
     private static final Logger log = LogManager.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
 
@@ -29,9 +34,42 @@ public class Driver {
         setBrowser();
     }
 
+    @BeforeClass
+    public void pageSetup() {
+        try {
+            pages = new PageCollection(driver);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+    }
+
+    @BeforeMethod
+    public static void methodLevelSetup() {
+
+    }
+
+    @AfterMethod
+    public static void endTest() {
+
+    }
+
+    @AfterClass
+    public void cleanUp() {
+
+    }
+
+    @AfterSuite
+    public void close() {
+        driver.close();
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+
 
     private void envSetup() {
         log.info("Going to setup Env");
+        browser = constants.getValue(ApplicationConstants.WEB_BROWSER);
         if (env.equalsIgnoreCase("sit")) {
             env = "SIT";
         } else if (env.equalsIgnoreCase("uat")) {
