@@ -15,8 +15,9 @@ import java.lang.invoke.MethodHandles;
 
 public class Driver {
 
-    protected static String env = System.getProperty("env");
+    public static String env = System.getProperty("env");
     protected static String browser = null;
+    protected static String baseUrl;
     public static WebDriver driver;
     public static ConstantUtils constants = ConstantUtils.getInstance();
     public static PageCollection pages;
@@ -70,6 +71,7 @@ public class Driver {
     private void envSetup() {
         log.info("Going to setup Env");
         browser = constants.getValue(ApplicationConstants.WEB_BROWSER);
+        baseUrl = constants.getValue(ApplicationConstants.BASE_URL);
         if (env.equalsIgnoreCase("sit")) {
             env = "SIT";
         } else if (env.equalsIgnoreCase("uat")) {
@@ -87,6 +89,7 @@ public class Driver {
                 case "chrome":
                     WebDriverManager.chromedriver().setup();
                     browserCapabilities();
+                    startBrowser(baseUrl);
                     break;
                 case "firefox":
                     WebDriverManager.firefoxdriver().setup();
@@ -108,5 +111,9 @@ public class Driver {
         options.setHeadless(false);
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
+    }
+
+    private void startBrowser(String url) {
+        driver.get(url);
     }
 }
