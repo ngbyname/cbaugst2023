@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
 
+import static com.code.bull.driver.Driver.commonLib;
 import static com.code.bull.driver.Driver.env;
 
 public class ConstantUtils {
@@ -33,13 +34,13 @@ public class ConstantUtils {
                 inFile = new Scanner(new FileReader(file));
                 inFile.next();
             } catch (FileNotFoundException e) {
-                System.out.println(e.getMessage());
+                commonLib.error(e.getMessage());
             }
             try {
                 InputStream input = Files.newInputStream(Paths.get(file));
                 props.load(input);
             } catch (IOException e) {
-                System.out.println(e.getMessage());
+                commonLib.error(e.getMessage());
             }
         });
     }

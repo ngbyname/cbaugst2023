@@ -1,7 +1,9 @@
 package com.code.bull.driver;
 
+import com.code.bull.commonutils.actions.BaseActions;
 import com.code.bull.commonutils.applicationutils.constants.ApplicationConstants;
 import com.code.bull.commonutils.applicationutils.constants.ConstantUtils;
+import com.code.bull.commonutils.commonlib.CommonLib;
 import com.code.bull.pagerepository.pagemethods.PageCollection;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.logging.log4j.LogManager;
@@ -21,6 +23,10 @@ public class Driver {
     public static WebDriver driver;
     public static ConstantUtils constants = ConstantUtils.getInstance();
     public static PageCollection pages;
+    public static StringBuilder assertCheck;
+    public static final BaseActions actions = new BaseActions();
+    public static CommonLib commonLib = new CommonLib();
+
 
     private static final Logger log = LogManager.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
 
@@ -46,7 +52,11 @@ public class Driver {
 
     @BeforeMethod
     public static void methodLevelSetup() {
-
+        try {
+            assertCheck = new StringBuilder();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
     }
 
     @AfterMethod
@@ -108,7 +118,7 @@ public class Driver {
     private void browserCapabilities() {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("window-size=1792,1120");
-        options.setHeadless(false);
+        options.setHeadless(true);
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
     }

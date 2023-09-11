@@ -9,4 +9,8 @@ public class PageCollection {
     public PageCollection(WebDriver driver) {
         this.driver = driver;
     }
+
+    public LandingPageMethods getLandingPage() {
+        return new LandingPageMethods(driver);
+    }
 }
